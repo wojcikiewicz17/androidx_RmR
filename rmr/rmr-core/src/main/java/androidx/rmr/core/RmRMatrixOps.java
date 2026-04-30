@@ -84,6 +84,41 @@ public final class RmRMatrixOps {
         }
     }
 
+
+
+    public static void transposeInto(@NonNull RmRMatrix input, @NonNull RmRMatrix out) {
+        if (input.getRows() != out.getCols() || input.getCols() != out.getRows()) {
+            throw new IllegalArgumentException("Output matrix has incompatible dimensions.");
+        }
+        double[] inData = input.getDataUnsafe();
+        double[] outData = out.getDataUnsafe();
+        int inRows = input.getRows();
+        int inCols = input.getCols();
+        for (int row = 0; row < inRows; row++) {
+            int inOffset = row * inCols;
+            for (int col = 0; col < inCols; col++) {
+                outData[col * inRows + row] = inData[inOffset + col];
+            }
+        }
+    }
+
+    public static void applyInto(@NonNull RmRMatrix input, @NonNull RmRMatrix out) {
+        input.linearFlipInto(out);
+    }
+
+    public static double vectorDot(@NonNull RmRMatrix left, @NonNull RmRMatrix right) {
+        if (left.getCols() != 1 || right.getCols() != 1 || left.getRows() != right.getRows()) {
+            throw new IllegalArgumentException("Dot product requires Nx1 vectors with matching dimensions.");
+        }
+        double[] leftData = left.getDataUnsafe();
+        double[] rightData = right.getDataUnsafe();
+        double sum = 0.0;
+        for (int i = 0; i < leftData.length; i++) {
+            sum += leftData[i] * rightData[i];
+        }
+        return sum;
+    }
+
     @NonNull
     public static RmRMatrix add(@NonNull RmRMatrix left, @NonNull RmRMatrix right) {
         return left.add(right);
