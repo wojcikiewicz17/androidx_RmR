@@ -19,7 +19,7 @@
 #include <cstring>
 
 // Include platform-specific SIMD headers
-#ifdef __ARM_NEON
+#if defined(__aarch64__) || defined(__ARM_NEON) || defined(__ARM_NEON__)
 #include <arm_neon.h>
 #define HAS_NEON 1
 #endif
